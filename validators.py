@@ -1,46 +1,41 @@
+# Import modules
 import logging
 import ipaddress
 from scapy.all import IP, ICMP, sr1
 
+# Prevents uncessary warnings
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
-
-# def check_ip_scope(target_ip):
-#     private_ip_range = ("192.168", "10.", "172.")
-#     if any(target_ip.startswith(prefix) for prefix in private_ip_range):
-#         print("")
-#         return True
-#     else:
-#         print("")
-#         print()
-#         return has_internet()
-
+def has_internet():
+    # Checks if there is internet
+    print("Checking for internet access...")
+    
+    packet = IP(dst="8.8.8.8") / ICMP()
+    response = sr1(packet, timeout=2, verbose=0)
+    if response:
+        print("Connected to the internet!")
+        return True
+    else:
+        print(f"Connect to the internet and try again!")
+        return False
 
 def validate_ip(target_ip):
     try:
-        # CHECK IF THE TYPE OF IP (PRIVATE / PUBLIC)
+        # Checks if IP is valid
         ipAddress = ipaddress.ip_address(target_ip)
+
+        # Check for the type of IP (PRIVATE / PUBLIC)
         if ipAddress.is_private:
             print("PRIVATE IP DETECTED (LOCAL NETWORK SCAN)!")
             return True
         else:
             print("PUBLIC IP DETECTED (INTERNET ACCESS IS REQUIRED FOR THE SCAN)!")
-            print("CHECKING FOR INTERNET ACCESS...")
-            print()
-            return True
+            # Checks for internet access
+            return has_internet()
+
+    # Throw ValueError if the IP is not valid
     except ValueError:
-        print(f"Error: '{target_ip}' Invalid IP address")
-
-
-def has_internet():
-    print("CHECKING FOR INTERNET ACCESS...")
-    packet = IP(dst="8.8.8.8") / ICMP()
-    response = sr1(packet, timeout=2, verbose=0)
-    if response:
-        print("CONNECTED TO THE INTERNET!")
-        return True
-    else:
-        print(f"Connect to the internet and try again!")
+        print(f"Error: '{target_ip}' Invalid IP address");
         return False
 
 

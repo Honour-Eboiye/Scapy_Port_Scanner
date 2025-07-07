@@ -1,5 +1,13 @@
+"""
+Install scapy using 'pip install scapy'
+or for linux, 'sudo apt install python3-scapy'
+
+"""
+
+# Import modules and files to use functions
 import argparse
 from tcp_scan import tcp_port_scan
+from udp_scan import udp_port_scan
 from validators import validate_ip
 from validators import has_internet
 from validators import validate_ports
@@ -24,7 +32,8 @@ def main():
     )
 
     args = parser.parse_args()
-    # IF STATEMENT IS NOT TRUE EXIT THE PROGRAM
+
+    # If statements are not true exit the program
     if not validate_ip(args.target_ip):
         return
     elif not has_internet():
@@ -41,9 +50,10 @@ def main():
     ):
         if args.protocol in ["tcp", "all"]:
             print(f"TCP/{port}: {tcp_port_scan(args.target_ip, port)}")
-        # if args.protocol in ["udp", "all"]:
-        #     print(f"UDP/{port}: {tcp_port_scan(args.target_ip, port)}")
-
+        if args.protocol in ["udp", "all"]:
+            print(f"UDP/{port}: {udp_port_scan(args.target_ip, port)}")
+    
+    print("Scan complete...")
 
 if __name__ == "__main__":
     main()
