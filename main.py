@@ -1,15 +1,9 @@
 import argparse
 from tcp_scan import tcp_port_scan
+from validators import validate_ip
+from validators import has_internet
+from validators import validate_ports
 
-def validate_ports(start: int, end: int) -> bool:
-    # Checks if port are valid
-    if not (1 <= start <= 65535 and 1 <= end <= 65535):
-        print("Error: Ports must be between 1 and 65535")
-        return False
-    if start > end: 
-        print("Error: Start port must be less than or equal to end port.")
-        return False
-    return True
 
 def main():
     # Initialize ArgumentParser to handle command-line inputs
@@ -21,20 +15,35 @@ def main():
     parser.add_argument("end_port", type=int, help="Last port to scan (1-65535)")
 
     # Optional argument
-    parser.add_argument("-p", "--protocol", choices=["tcp", "udp", "all"], default="tcp", help="Protocol to scan")
-    
+    parser.add_argument(
+        "-p",
+        "--protocol",
+        choices=["tcp", "udp", "all"],
+        default="tcp",
+        help="Protocol to scan",
+    )
+
     args = parser.parse_args()
-    
-    if not validate_ports(args.start_port, args.end_port):
+    # IF STATEMENT IS NOT TRUE EXIT THE PROGRAM
+    if not validate_ip(args.target_ip):
         return
-    
-    print(f"\n Scanning {args.target_ip} ({args.protocol.upper()} from port {args.start_port} to {args.end_port})")
-    
-    for port in range(args.start_port, args.end_port + 1):
+    elif not has_internet():
+        return
+    elif not validate_ports(args.start_port, args.end_port):
+        return
+
+    print(
+        f"\n Scanning {args.target_ip} ({args.protocol.upper()} from port {args.start_port} to {args.end_port})"
+    )
+
+    for port in range(
+        args.start_port, (args.end_port + 1) if args.end_port else (args.start_port + 1)
+    ):
         if args.protocol in ["tcp", "all"]:
             print(f"TCP/{port}: {tcp_port_scan(args.target_ip, port)}")
-        if args.protocol in ["udp", "all"]:
-            print(f"UDP/{port}: {tcp_port_scan(args.target_ip, port)}")
+        # if args.protocol in ["udp", "all"]:
+        #     print(f"UDP/{port}: {tcp_port_scan(args.target_ip, port)}")
+
 
 if __name__ == "__main__":
     main()
