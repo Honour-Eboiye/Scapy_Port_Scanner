@@ -6,12 +6,16 @@ from scapy.all import IP, ICMP, sr1
 # Prevents uncessary warnings
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
-def has_internet():
-    # Checks if there is internet
+# Checks if there is internet connection
+def has_internet() -> bool :
     print("Checking for internet access...")
     
+    # Create a packet for Google.com(8.8.8.8)
     packet = IP(dst="8.8.8.8") / ICMP()
+
+    # Send a packet a wait for response
     response = sr1(packet, timeout=2, verbose=0)
+
     if response:
         print("Connected to the internet!")
         return True
@@ -19,9 +23,10 @@ def has_internet():
         print(f"Connect to the internet and try again!")
         return False
 
-def validate_ip(target_ip):
+# Validates target IP
+def validate_ip(target_ip: str) -> bool:
     try:
-        # Checks if IP is valid
+       # Validate IP and store it in a variable
         ipAddress = ipaddress.ip_address(target_ip)
 
         # Check for the type of IP (PRIVATE / PUBLIC)
@@ -33,19 +38,20 @@ def validate_ip(target_ip):
             # Checks for internet access
             return has_internet()
 
-    # Throw ValueError if the IP is not valid
+    # Throw error if the IP is not valid (ValueError)
     except ValueError:
         print(f"Error: '{target_ip}' Invalid IP address");
         return False
 
 
+# Checks if port are valid
 def validate_ports(start: int, end: int) -> bool:
-    # Checks if port are valid
     if not (1 <= start <= 65535 and 1 <= end <= 65535):
         print("Error: Ports must be between 1 and 65535")
         return False
-    elif start > end:
+    if start > end:
         print("Error: Start port must be less than or equal to end port.")
         return False
-    else:
-        return True
+
+    # Return true if no errors are thrown
+    return True

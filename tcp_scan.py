@@ -7,7 +7,7 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 def tcp_port_scan(target_ip: str, port: int) -> str:
     """
-    Scans TCP PORTS using S packets
+    Scans TCP PORTS using SYN packets
 
     Arguments:
         target_ip: Target IP address e.g "192.168.0.1"
@@ -33,6 +33,7 @@ def tcp_port_scan(target_ip: str, port: int) -> str:
     if response and response.haslayer(TCP):
         # Check if response is SYN-ACK
         if response[TCP].flags == SYN_ACK:
+        # Send RST to close the connection
             sr1(rst_packet, timeout=2, verbose=0)
             return "OPEN"
         # Check if response is RST-ACK
