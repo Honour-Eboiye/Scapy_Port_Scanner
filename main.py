@@ -17,12 +17,12 @@ def main():
     # Initialize ArgumentParser to handle command-line inputs
     parser = argparse.ArgumentParser(description="Port Scanner using scapy...")
 
-    # Initialize required/optional arguments
+    # Initialize required arguments
     parser.add_argument("target_ip", help="Target IP address")
     parser.add_argument("start_port", type=int, help="First port to scan (1-65535)")
     parser.add_argument("end_port", type=int, help="Last port to scan (1-65535)")
 
-    # Optional argument
+    # Initialize Optional argument
     parser.add_argument(
         "-p",
         "--protocol",
@@ -33,21 +33,17 @@ def main():
 
     args = parser.parse_args()
 
-    # If statements are not true exit the program
-    if not validate_ip(args.target_ip):
+    # End the program if the functions are invalid
+    if not validate_ip(args.target_ip) or not has_internet() or not validate_ports(args.start_port,args.end_port): 
         return
-    elif not has_internet():
-        return
-    elif not validate_ports(args.start_port, args.end_port):
-        return
-
+    
+    # Print a friendly message to the console
     print(
         f"\n Scanning {args.target_ip} ({args.protocol.upper()} from port {args.start_port} to {args.end_port})"
     )
 
-    for port in range(
-        args.start_port, (args.end_port + 1) if args.end_port else (args.start_port + 1)
-    ):
+    # Iterate through the ports and prints a response
+    for port in range(args.start_port, (args.end_port + 1)):
         if args.protocol in ["tcp", "all"]:
             print(f"TCP/{port}: {tcp_port_scan(args.target_ip, port)}")
         if args.protocol in ["udp", "all"]:
@@ -55,5 +51,6 @@ def main():
     
     print("Scan complete...")
 
+# Executes the main function
 if __name__ == "__main__":
     main()

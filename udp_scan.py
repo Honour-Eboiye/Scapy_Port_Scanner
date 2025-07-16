@@ -17,7 +17,7 @@ def udp_port_scan(target_ip: str, port: int) -> str:
     Response:
         "OPEN" if UDP response is received
         "OPEN or FILTERED" if no response (port might be open or filtered)
-        "CLOSED" if ICMP Port Unreachable ris eceived
+        "CLOSED" if ICMP Port Unreachable is received
         "FILTERED" if other ICMP error is received
     """
     
@@ -45,5 +45,4 @@ def udp_port_scan(target_ip: str, port: int) -> str:
         else: 
             return "FILTERED (ICMP)"
         
-    # UDP response received - port is open
     return "UNKNOWN RESPONSE"
