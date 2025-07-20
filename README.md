@@ -129,32 +129,12 @@ Scapy_Port_Scanner/
 - Handles various ICMP error codes appropriately
 - Accounts for UDP's connectionless nature
 
-### Security Features
+### Some other Features
 
 - **Private IP Detection**: Automatically detects local network scans
 - **Internet Connectivity Verification**: Checks connection before public IP scans
 - **Input Validation**: Comprehensive validation of IP addresses and port ranges
 - **Error Handling**: Robust error handling for network timeouts and exceptions
-
-## Requirements and Permissions
-
-### Administrative Privileges
-
-This tool requires administrative/root privileges because:
-
-- Raw socket creation for custom packet crafting
-- Low-level network packet manipulation
-- Direct access to network interfaces
-
-### Run with Privileges
-
-```bash
-# Windows (Run as Administrator)
-python main.py 192.168.1.1 80 443
-
-# Linux/macOS
-sudo python main.py 192.168.1.1 80 443
-```
 
 ### Common Issues
 
